@@ -2,6 +2,56 @@
 #include "tdas/extra.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#define BAJO 0
+#define MEDIO 1
+#define ALTO 2
+
+typedef struct {
+  int ID;
+  char descriProblema[100];
+  int prioridad;
+} ticketPersona;
+
+ticketPersona* crearTicket(int id, char descripcion){
+  ticketPersona *newTicket = (ticketPersona*)malloc(sizeof(ticketPersona));
+
+  if(newTicket == NULL){
+    return NULL;
+  }
+
+  newTicket->ID = id;
+  strcpy(newTicket->descriProblema,descripcion);
+  newTicket->prioridad = BAJO;
+
+  return newTicket;
+}
+void registrar_paciente(List *pacientes) {
+  int id;
+  char descripcion[100];
+
+  printf("Ingrese ID paciente: ");
+  scanf("%d",%id);
+  getchar();
+
+  printf("Ingrese descripcion paciente: ");
+  scanf("%99[^\n]",descripcion);
+
+  //printf("Registrar nuevo paciente\n");
+
+  ticketPersona *newTicket = crearTicket(id,descripcion);
+  if(newTicket != NULL){
+    list_pushBack(pacientes,newTicket);
+  }
+
+
+
+  // Aquí implementarías la lógica para registrar un nuevo paciente
+}
+
+
+
 
 // Menú principal
 void mostrarMenuPrincipal() {
@@ -18,10 +68,10 @@ void mostrarMenuPrincipal() {
   puts("6) Salir");
 }
 
-void registrar_paciente(List *pacientes) {
+/*void registrar_paciente(List *pacientes) {
   printf("Registrar nuevo paciente\n");
   // Aquí implementarías la lógica para registrar un nuevo paciente
-}
+}*/
 
 void mostrar_lista_pacientes(List *pacientes) {
   // Mostrar pacientes en la cola de espera
@@ -62,6 +112,7 @@ int main() {
       puts("Opción no válida. Por favor, intente de nuevo.");
     }
     presioneTeclaParaContinuar();
+
 
   } while (opcion != '6');
 
