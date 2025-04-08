@@ -14,7 +14,7 @@ typedef struct {
   int prioridad;
 } ticketPersona;
 
-ticketPersona* crearTicket(int id, char descripcion){
+ticketPersona* crearTicket(int id, const char *descripcion){
   ticketPersona *newTicket = (ticketPersona*)malloc(sizeof(ticketPersona));
 
   if(newTicket == NULL){
@@ -32,11 +32,11 @@ void registrar_paciente(List *pacientes) {
   char descripcion[100];
 
   printf("Ingrese ID paciente: ");
-  scanf("%d",%id);
+  scanf("%d",&id);
   getchar();
 
   printf("Ingrese descripcion paciente: ");
-  scanf("%99[^\n]",descripcion);
+  scanf("99[^\n]",descripcion);
 
   //printf("Registrar nuevo paciente\n");
 
@@ -44,10 +44,49 @@ void registrar_paciente(List *pacientes) {
   if(newTicket != NULL){
     list_pushBack(pacientes,newTicket);
   }
-
-
-
   // Aquí implementarías la lógica para registrar un nuevo paciente
+}
+
+void asignarPaciente(List *pacientes){
+  int id;
+  char descripcion[100];
+
+  printf("Ingrese ID paciente: ");
+  scanf("%d",&id);
+  getchar();
+
+  printf("Ingrese prioridad paciente con mayuscula la primera letra: ");
+  scanf("%s",descripcion);
+
+  ticketPersona *paciente = list_first(pacientes);
+
+  while(paciente != NULL){
+    if(paciente->ID == id){
+      if(strcmp(descripcion,"alto") == 0) {
+        paciente->prioridad = ALTO;
+      } else if (strcmp(descripcion,"medio") == 0){
+          paciente->prioridad = MEDIO;
+      } else if (strcmp(descripcion,"bajo") == 0){
+        paciente->prioridad = BAJO;
+      } else {
+        printf("No existe o no incluyo mayuscula en primera letra.");
+      }
+      return;
+    }
+    paciente = list_next(pacientes);
+  }
+  printf("No se encontro paciente con ese ID.\n");
+}
+
+void mostrar_lista_pacientes(List *pacientes) {
+  // Mostrar pacientes en la cola de espera
+  printf("Pacientes en espera: \n");
+  // Aquí implementarías la lógica para recorrer y mostrar los pacientes
+  while(paciente != NULL){
+    if(paciente->prioridad == ALTO){
+
+    }
+  }
 }
 
 
@@ -73,11 +112,7 @@ void mostrarMenuPrincipal() {
   // Aquí implementarías la lógica para registrar un nuevo paciente
 }*/
 
-void mostrar_lista_pacientes(List *pacientes) {
-  // Mostrar pacientes en la cola de espera
-  printf("Pacientes en espera: \n");
-  // Aquí implementarías la lógica para recorrer y mostrar los pacientes
-}
+
 
 int main() {
   char opcion;
