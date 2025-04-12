@@ -31,6 +31,8 @@ ticketPersona* crearTicket(int id, const char *descripcion){
 
   return newTicket;
 }
+
+
 void registrar_paciente(List *pacientes) {
   int id;
   char descripcion[100];
@@ -38,6 +40,7 @@ void registrar_paciente(List *pacientes) {
   printf("Ingrese ID paciente: ");
   scanf("%d",&id);
   getchar();
+
   ticketPersona *paciente = list_first(pacientes);
   while(paciente != NULL){
     if(paciente->ID == id){
@@ -56,10 +59,9 @@ void registrar_paciente(List *pacientes) {
   if(newTicket != NULL){
     list_pushBack(pacientes,newTicket);
   }
-  // Aquí implementarías la lógica para registrar un nuevo paciente
 }
 
-void hacerMini(char *texto){
+void hacerMinuscula(char *texto){
   for(int i = 0; texto[i]; i++){
     texto[i] = tolower(texto[i]);
   }
@@ -75,10 +77,9 @@ void asignarPaciente(List *pacientes){
 
   printf("Ingrese prioridad paciente: ");
   scanf("%s",descripcion);
-  hacerMini(descripcion);
+  hacerMinuscula(descripcion);
 
   ticketPersona *paciente = list_first(pacientes);
-
   while(paciente != NULL){
     if(paciente->ID == id){
       if(strcmp(descripcion,"alto") == 0) {
@@ -98,9 +99,10 @@ void asignarPaciente(List *pacientes){
 }
 
 void mostrar_lista_pacientes(List *pacientes) {
+  ticketPersona *paciente;
   printf("Pacientes en espera ordenados por prioridad: \n");
-  ticketPersona *paciente = list_first(pacientes);
 
+  paciente = list_first(pacientes);
   while(paciente != NULL){
     if(paciente->prioridad == ALTO){
       printf("ID: %d\n", paciente->ID);
@@ -128,7 +130,7 @@ void mostrar_lista_pacientes(List *pacientes) {
   }
 }
 
-void ProcesarSiguienteTicket(List *pacientes){
+void ProcesarSiguienteTicket(List *pacientes, List *pacientesAtendidos){
   ticketPersona *currentTicket = NULL;
   ticketPersona *paciente = list_first(pacientes);
   time_t horita = time(NULL);
@@ -148,6 +150,7 @@ void ProcesarSiguienteTicket(List *pacientes){
     printf("Prioridad: %d\n",currentTicket->prioridad);
     printf("Hora registrada: %s\n",ctime(&currentTicket->hora));
     paciente = list_first(pacientes);
+
     while(paciente != NULL){
       if(paciente == currentTicket){
         list_pushBack(pacientesAtendidos,currentTicket);
@@ -191,7 +194,7 @@ void BuscarticketporID(List *pacientes,List *pacientesAtendidos){
     paciente = list_next(pacientes);
   }
   
-  ticketPersona *paciente = list_first(pacientesAtendidos);
+  paciente = list_first(pacientesAtendidos);
   while(paciente != NULL){
     if(paciente->ID == id){
       printf("ID: %d\n",paciente->ID);
@@ -218,8 +221,6 @@ void BuscarticketporID(List *pacientes,List *pacientesAtendidos){
 }
 
 
-
-
 // Menú principal
 void mostrarMenuPrincipal() {
   limpiarPantalla();
@@ -234,13 +235,6 @@ void mostrarMenuPrincipal() {
   puts("5) Mostrar pacientes por prioridad");
   puts("6) Salir");
 }
-
-/*void registrar_paciente(List *pacientes) {
-  printf("Registrar nuevo paciente\n");
-  // Aquí implementarías la lógica para registrar un nuevo paciente
-}*/
-
-
 
 int main() {
   char opcion;
@@ -264,7 +258,7 @@ int main() {
       mostrar_lista_pacientes(pacientes);
       break;
     case '4':
-      ProcesarSiguienteTicket(pacientes);
+      ProcesarSiguienteTicket(pacientes,pacientesAtendidos);
       break;
     case '5':
       BuscarticketporID(pacientes,pacientesAtendidos);
