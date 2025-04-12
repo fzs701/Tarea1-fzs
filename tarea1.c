@@ -99,10 +99,9 @@ void asignarPaciente(List *pacientes){
 }
 
 void mostrar_lista_pacientes(List *pacientes) {
-  ticketPersona *paciente;
   printf("Pacientes en espera ordenados por prioridad: \n");
 
-  paciente = list_first(pacientes);
+  ticketPersona *paciente = list_first(pacientes);
   while(paciente != NULL){
     if(paciente->prioridad == ALTO){
       printf("ID: %d\n", paciente->ID);
