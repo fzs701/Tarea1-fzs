@@ -36,6 +36,7 @@ ticketPersona* crearTicket(int id, const char *descripcion){
 void registrar_paciente(List *pacientes) {
   int id;
   char descripcion[100];
+  printf("Registrar nuevo paciente\n");
 
   printf("Ingrese ID paciente: ");
   scanf("%d",&id);
@@ -52,8 +53,6 @@ void registrar_paciente(List *pacientes) {
 
   printf("Ingrese descripcion problema del paciente: ");
   scanf("%99[^\n]",descripcion);
-
-  printf("Registrar nuevo paciente\n");
 
   ticketPersona *newTicket = crearTicket(id,descripcion);
   if(newTicket != NULL){
@@ -104,8 +103,10 @@ void mostrar_lista_pacientes(List *pacientes) {
   ticketPersona *paciente = list_first(pacientes);
   while(paciente != NULL){
     if(paciente->prioridad == ALTO){
+      printf("------------");
       printf("ID: %d\n", paciente->ID);
       printf("Descripcion: %s\n",paciente->descriProblema);
+      printf("------------");
     }
     paciente = list_next(pacientes);
   }
@@ -113,8 +114,10 @@ void mostrar_lista_pacientes(List *pacientes) {
   paciente = list_first(pacientes);
   while(paciente != NULL){
     if(paciente->prioridad == MEDIO){
+      printf("------------");
       printf("ID: %d\n", paciente->ID);
       printf("Descripcion: %s\n",paciente->descriProblema);
+      printf("------------");
     }
     paciente = list_next(pacientes);
   }
@@ -122,8 +125,10 @@ void mostrar_lista_pacientes(List *pacientes) {
   paciente = list_first(pacientes);
   while(paciente != NULL){
     if(paciente->prioridad == BAJO){
+      printf("------------");
       printf("ID: %d\n", paciente->ID);
       printf("Descripcion: %s\n",paciente->descriProblema);
+      printf("------------");
     }
     paciente = list_next(pacientes);
   }
@@ -144,6 +149,7 @@ void ProcesarSiguienteTicket(List *pacientes, List *pacientesAtendidos){
   }
 
   if(currentTicket != NULL){
+    printf("Paciente a ser atendido:");
     printf("ID: %d\n",currentTicket->ID);
     printf("Descripcion: %s\n",currentTicket->descriProblema);
     printf("Prioridad: %d\n",currentTicket->prioridad);
@@ -173,6 +179,7 @@ void BuscarticketporID(List *pacientes,List *pacientesAtendidos){
   ticketPersona *paciente = list_first(pacientes);
   while(paciente != NULL){
     if(paciente->ID == id){
+      printf("Paciente:");
       printf("ID: %d\n",paciente->ID);
       printf("Descripcion: %s\n",paciente->descriProblema);
       printf("Prioridad: ");
