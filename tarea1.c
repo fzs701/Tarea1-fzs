@@ -122,9 +122,9 @@ void asignarTicket(List *pacientes){
         printf("AVISO: No existe esa prioridad, intente de nuevo.\n"); //si se ingresa otro texto que no sea alto,medio
         return;
       }                                                         //bajo, se muestra un aviso
-      ticketPersona *temp = paciente;
+      
       list_popCurrent(pacientes);
-      ordenarTickets(pacientes,temp);
+      ordenarTickets(pacientes,paciente);
       printf("Prioridad ingresada.\n");
       return;
     }
