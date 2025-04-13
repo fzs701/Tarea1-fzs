@@ -103,11 +103,10 @@ void mostrarListaTicket(List *pacientes) {
   ticketPersona *paciente = list_first(pacientes);
   while(paciente != NULL){
     if(paciente->prioridad == ALTO){
-      printf("------------\n");
       printf("ID: %d\n", paciente->ID);
       printf("Descripcion: %s\n",paciente->descriProblema);
-      printf("Prioridad: %d\n",paciente->prioridad);
-      //printf("------------");
+      printf("Prioridad: Alto");
+      printf("------------\n");
     }
     paciente = list_next(pacientes);
   }
@@ -115,11 +114,10 @@ void mostrarListaTicket(List *pacientes) {
   paciente = list_first(pacientes);
   while(paciente != NULL){
     if(paciente->prioridad == MEDIO){
-      printf("------------\n");
       printf("ID: %d\n", paciente->ID);
       printf("Descripcion: %s\n",paciente->descriProblema);
-      printf("Prioridad: %d\n",paciente->prioridad);
-      //printf("------------");
+      printf("Prioridad: Medio");
+      printf("------------\n");
     }
     paciente = list_next(pacientes);
   }
@@ -127,11 +125,10 @@ void mostrarListaTicket(List *pacientes) {
   paciente = list_first(pacientes);
   while(paciente != NULL){
     if(paciente->prioridad == BAJO){
-      printf("------------\n");
       printf("ID: %d\n", paciente->ID);
       printf("Descripcion: %s\n",paciente->descriProblema);
-      printf("Prioridad: %d\n",paciente->prioridad);
-      //printf("------------");
+      printf("Prioridad: Bajo");
+      printf("------------\n");
     }
     paciente = list_next(pacientes);
   }
