@@ -39,7 +39,11 @@ void ordenarTickets(List *pacientes, ticketPersona *ticket){
     return;
   }*/
   ticketPersona *paciente = list_first(pacientes);
-  int comprobar = 0;
+  if(paciente == NULL){
+    list_pushBack(pacientes,ticket);
+    return;
+  }
+  //int comprobar = 0;
   
   /*while(paciente != NULL){ //recorremos lista para encontrar ticket con mayor prioridad
     if((ticket->prioridad > paciente->prioridad) ||
@@ -53,18 +57,16 @@ void ordenarTickets(List *pacientes, ticketPersona *ticket){
   while(paciente != NULL){ //recorremos lista para encontrar ticket con mayor prioridad
     if((ticket->prioridad > paciente->prioridad)){
       list_pushCurrent(pacientes,ticket);   //si ticket tiene prioridad mas alta que actual, lo elegimos, 
-      comprobar = 1;
-      break;
-    } else if ((ticket->prioridad == paciente->prioridad && ticket->hora < paciente->hora)){
+      return;
+    }
+    if ((ticket->prioridad == paciente->prioridad) && difftime(ticket->hora, paciente->hora)< 0){
       list_pushCurrent(pacientes,ticket);   //si ticket tiene prioridad mas alta que actual, lo elegimos, 
-      comprobar = 1;
-      break;
+      return;
     }
     paciente = list_next(pacientes);//siguiente de la lista
   }
-  if(!comprobar){
-    list_pushBack(pacientes,ticket);
-  }
+  list_pushBack(pacientes,ticket);
+  
   /*list_clean(pacientes);
   paciente = list_first(listaTemp);
   while(paciente != NULL){
