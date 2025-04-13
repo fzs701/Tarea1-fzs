@@ -32,11 +32,23 @@ ticketPersona* crearTicket(int id, const char *descripcion){  //creamos un nuevo
   return newTicket;
 }
 
+void ordenarTickets(List *pacientes, ticketPersona *ticket){
+  ticketPersona *paciente = list_first(pacientes);
+  while(paciente != NULL){ //recorremos lista para encontrar ticket con mayor prioridad
+    if((ticket->prioridad > paciente->prioridad) ||
+      (ticket->prioridad == paciente->prioridad && ticket->hora < paciente->hora)){
+      list_pushCurrent(pacientes,ticket);   //si ticket tiene prioridad mas alta que actual, lo elegimos, 
+      return;
+    }                              //si tienen misma, se escoge por hora mas baja(antes)
+    paciente = list_next(pacientes);//siguiente de la lista
+  }
+  list_pushBack(pacientes,ticket);
+}
 
 void registrarTicket(List *pacientes) {
   int id;
   char descripcion[100];
-  printf("Registrar nuevo ticket: \n");
+  printf("--Registrar nuevo ticket-- \n");
 
   printf("Ingrese ID ticket: "); 
   if(scanf("%d",&id) != 1){  //se verifica que el id ingresado sea un numero
@@ -60,7 +72,7 @@ void registrarTicket(List *pacientes) {
 
   ticketPersona *newTicket = crearTicket(id,descripcion);//se crea ticket con los datos entregados
   if(newTicket != NULL){
-    list_pushBack(pacientes,newTicket); //lo agregamos a la lista
+    ordenarTickets(pacientes,newTicket); //lo agregamos a la lista
   }
 }
 
@@ -69,6 +81,8 @@ void hacerMinuscula(char *texto){ //hacemos minuscula el texto que nos entreguen
     texto[i] = tolower(texto[i]);
   }
 }
+
+
 
 void asignarTicket(List *pacientes){
   int id;
@@ -93,7 +107,12 @@ void asignarTicket(List *pacientes){
         paciente->prioridad = BAJO;
       } else {
         printf("AVISO: No existe esa prioridad, intente de nuevo.\n"); //si se ingresa otro texto que no sea alto,medio
+        return;
       }                                                         //bajo, se muestra un aviso
+      ticketPersona *temp = paciente;
+      list_popCurrent(pacientes);
+      ordenarTickets(pacientes,temp);
+      printf("Prioridad ingresada.\n");
       return;
     }
     paciente = list_next(pacientes); //pasamos al siguiente ticket
@@ -106,51 +125,27 @@ void mostrarListaTicket(List *pacientes) {
   //recorremos la lista para imprimir los tickets con prioridad alta
   ticketPersona *paciente = list_first(pacientes); //apuntamos a primer elemento lista
   while(paciente != NULL){
-    if(paciente->prioridad == ALTO){ //comparamos si ticket tiene prioridad alta, si es asi se imprime
-      printf("ID: %d\n", paciente->ID);
-      printf("Descripcion: %s\n",paciente->descriProblema);
-      printf("Prioridad: Alto\n");
+    printf("ID: %d\n",paciente->ID);
+    printf("Descripcion: %s\n",paciente->descriProblema);
+    printf("Prioridad: ");
+      switch (paciente->prioridad){ //indicamos la prioridad segun escogida
+        case ALTO:
+          printf("Alto\n");
+          break;
+        case MEDIO:
+          printf("Medio\n");
+          break;
+        case BAJO:
+          printf("Bajo\n");
+          break;
+      }
       printf("------------\n");
-    }
-    paciente = list_next(pacientes); //apuntamos al siguiente puntero
-  }
-  //recorremos la lista para imprimir los tickets con prioridad media
-  paciente = list_first(pacientes); //se reinicia puntero a principio lista
-  while(paciente != NULL){
-    if(paciente->prioridad == MEDIO){//comparamos si ticket tiene prioridad media, si es asi se imprime
-      printf("ID: %d\n", paciente->ID);
-      printf("Descripcion: %s\n",paciente->descriProblema);
-      printf("Prioridad: Medio\n");
-      printf("------------\n");
-    }
-    paciente = list_next(pacientes);//apuntamos al siguiente puntero
-  }
-  //recorremos la lista para imprimir los tickets con prioridad bajo
-  paciente = list_first(pacientes);//se reinicia puntero a principio lista
-  while(paciente != NULL){
-    if(paciente->prioridad == BAJO){//comparamos si ticket tiene prioridad bajo, si es asi se imprime
-      printf("ID: %d\n", paciente->ID);
-      printf("Descripcion: %s\n",paciente->descriProblema);
-      printf("Prioridad: Bajo\n");
-      printf("------------\n");
-    }
-    paciente = list_next(pacientes);//apuntamos al siguiente puntero
+      paciente = list_next(pacientes);//apuntamos al siguiente puntero
   }
 }
 
 void ProcesarSiguienteTicket(List *pacientes, List *pacientesAtendidos){
-  ticketPersona *currentTicket = NULL; //apuntamos al ticket con mayor prioridad que se almacera en iteraciones
-  ticketPersona *paciente = list_first(pacientes); //apuntamos a primero de la lista
-  time_t horita = time(NULL); //su hora actual
-
-  while(paciente != NULL){ //recorremos lista para encontrar ticket con mayor prioridad
-    if(currentTicket == NULL ||
-      (paciente->prioridad > currentTicket->prioridad) ||
-      (paciente->prioridad == currentTicket->prioridad && paciente->hora < currentTicket->hora)){
-      currentTicket = paciente;     //si ticket tiene prioridad mas alta que actual, lo elegimos, 
-    }                               //si tienen misma, se escoge por hora mas baja(antes)
-    paciente = list_next(pacientes);//siguiente de la lista
-  }
+  ticketPersona *currentTicket = list_first(pacientes); //apuntamos a primero de la lista
 
   if(currentTicket != NULL){ //cuando tengamos el ticket actual se imprimiran sus datos
     printf("Ticket en ser atendido: ");
@@ -169,20 +164,11 @@ void ProcesarSiguienteTicket(List *pacientes, List *pacientesAtendidos){
           break;
       }
     printf("Hora registrada: %s\n",ctime(&currentTicket->hora)); //mostramos hora como texto
-    
-    paciente = list_first(pacientes); //volvemos a recorrer la lista para encontrar y eliminar nodo actual
-    while(paciente != NULL){
-      if(paciente == currentTicket){
-        list_pushBack(pacientesAtendidos,currentTicket);//lo pasamos a otra lista(atendidos) antes eliminar
-        list_popCurrent(pacientes); //lo eliminamos de la lista (lista espera)
-        break;
-      }
-      paciente = list_next(pacientes);//pasamos al siguiente ticket
-    }
-  }else {
+    list_pushBack(pacientesAtendidos,currentTicket);//lo pasamos a otra lista(atendidos) antes eliminar
+    list_popCurrent(pacientes); //lo eliminamos de la lista (lista espera)
+  } else {
     printf("AVISO: No hay tickets para procesar.\n"); //si se eliminan todos los tickets o no hay se muestra aviso
   }
-
 }
 
 void BuscarticketporID(List *pacientes,List *pacientesAtendidos){
@@ -241,6 +227,18 @@ void BuscarticketporID(List *pacientes,List *pacientesAtendidos){
   printf("AVISO: No se encontro ese ID.\n"); //si no se encuentra se avisa
 }
 
+void limpiarPantalla(){
+  #ifdef _WIN32
+    system("cls");
+  #else 
+    system("clear");
+  #endif
+}
+void presioneTeclaParaContinuar(){
+  printf("Presione cualquier tecla para continuar...");
+  getchar();
+}
+
 
 // Menú principal para mostrar 
 void mostrarMenuPrincipal() {
@@ -264,7 +262,7 @@ int main() {
 
   do {
     mostrarMenuPrincipal();
-    printf("Ingrese su opción: ");
+    printf("\nIngrese su opcion: ");
     scanf(" %c", &opcion); // Nota el espacio antes de %c para consumir el
                            // newline anterior
 
