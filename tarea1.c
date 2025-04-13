@@ -20,7 +20,7 @@ typedef struct {                //estructura para definir un ticket
 ticketPersona* crearTicket(int id, const char *descripcion){  //creamos un nuevo ticket
   ticketPersona *newTicket = (ticketPersona*)malloc(sizeof(ticketPersona)); //reserva de memoria dinamica para el ticket
 
-  if(newTicket == NULL){
+  if(newTicket == NULL){ //retornamos null si no se guarda correctamente la memoria
     return NULL;
   }
 
@@ -33,43 +33,30 @@ ticketPersona* crearTicket(int id, const char *descripcion){  //creamos un nuevo
 }
 
 void ordenarTickets(List *pacientes, ticketPersona *ticket){
-  List *listaTemp = list_create();
-  /*if(list_first(pacientes) == NULL){
-    list_pushBack(pacientes,ticket);
-    return;
-  }*/
-  ticketPersona *paciente = list_first(pacientes);
-  int comprobar = 0;
-  
-  /*while(paciente != NULL){ //recorremos lista para encontrar ticket con mayor prioridad
-    if((ticket->prioridad > paciente->prioridad) ||
-      (ticket->prioridad == paciente->prioridad && ticket->hora < paciente->hora)){
-      list_pushCurrent(pacientes,ticket);   //si ticket tiene prioridad mas alta que actual, lo elegimos, 
-      comprobar = 1;
-      break;
-    }  
-    paciente = list_next(pacientes);//siguiente de la lista
-  }*/
-  while(paciente != NULL){ //recorremos lista para encontrar ticket con mayor prioridad
+  List *listaTemp = list_create(); //lista temporal para almacenar pacientes mientras ordenados y no hayan errores
+  ticketPersona *paciente = list_first(pacientes); //se comienza desde el primero
+  int comprobar = 0; //se utiliza una variable para comprobar si se inserto ticket en lista
+  while(paciente != NULL){ //recorremos lista si no es null
     if(!comprobar &&
-      ((ticket->prioridad > paciente->prioridad) ||
-      (ticket->prioridad == paciente->prioridad && difftime(ticket->hora, paciente->hora)< 0))){
-      list_pushBack(listaTemp,ticket);   //si ticket tiene prioridad mas alta que actual, lo elegimos, 
-      comprobar = 1;
+      ((ticket->prioridad > paciente->prioridad) || 
+      (ticket->prioridad == paciente->prioridad && (ticket->hora < paciente->hora )))){   
+      //si ticket tiene prioridad mas alta que actual, lo elegimos, y tambien comprobamos la hora 
+      list_pushBack(listaTemp,ticket); //insertamos en la listaTemp
+      comprobar = 1; //se inserto 
     }
-    list_pushBack(listaTemp, paciente);
+    list_pushBack(listaTemp, paciente); //insetamos en lista temp
     paciente = list_next(pacientes);//siguiente de la lista
   }
-  if (!comprobar) {
+  if (!comprobar) { //si el ticket de menor prioridad no se ha insertado, se inserta la final 
     list_pushBack(listaTemp, ticket);
   }
-  list_clean(pacientes);
+  list_clean(pacientes); //limpiamos para no tener problemas
   paciente = list_first(listaTemp);
-  while(paciente != NULL){
+  while(paciente != NULL){ //aqui insertamos los de la lista temp en la lista origianl para mantener orden
     list_pushBack(pacientes,paciente);
     paciente = list_next(listaTemp);
   }
-  list_clean(listaTemp);
+  list_clean(listaTemp); //liberamos memoria
 }
 
 void registrarTicket(List *pacientes) {
@@ -99,17 +86,15 @@ void registrarTicket(List *pacientes) {
 
   ticketPersona *newTicket = crearTicket(id,descripcion);//se crea ticket con los datos entregados
   if(newTicket != NULL){
-    ordenarTickets(pacientes,newTicket); //lo agregamos a la lista
+    ordenarTickets(pacientes,newTicket); //lo agregamos a la lista para ordenarlos
   }
 }
 
 void hacerMinuscula(char *texto){ //hacemos minuscula el texto que nos entreguen, en este caso la prioridad
-  for(int i = 0; texto[i]; i++){
+  for(int i = 0; texto[i]; i++){  //para no tener problemas a futuro
     texto[i] = tolower(texto[i]);
   }
 }
-
-
 
 void asignarTicket(List *pacientes){
   int id;
@@ -119,13 +104,12 @@ void asignarTicket(List *pacientes){
   scanf("%d",&id);
   getchar();
 
-  printf("Ingrese prioridad ticket(alto, medio o bajo): "); //ingresamos prioridad
-  scanf("%s",descripcion);
-  hacerMinuscula(descripcion); //hacemos toda la cadena en minuscula para no tener problemas con mayusculas
-
   ticketPersona *paciente = list_first(pacientes);//apuntamos al primer ticket
   while(paciente != NULL){ //si paciente es distinto a null avanzamos
     if(paciente->ID == id){ //recorremos lista hasta encontrar id del ticket ingresado
+      printf("Ingrese prioridad ticket(alto, medio o bajo): "); //ingresamos prioridad
+      scanf("%s",descripcion);
+      hacerMinuscula(descripcion); //hacemos toda la cadena en minuscula para no tener problemas con mayusculas
       if(strcmp(descripcion,"alto") == 0) { //comparamos cadena con prioridad, para determinarla con prioridad ingresada
         paciente->prioridad = ALTO;
       } else if (strcmp(descripcion,"medio") == 0){
@@ -136,10 +120,9 @@ void asignarTicket(List *pacientes){
         printf("AVISO: No existe esa prioridad, intente de nuevo.\n"); //si se ingresa otro texto que no sea alto,medio
         return;
       }                                                         //bajo, se muestra un aviso
-      
-      list_popCurrent(pacientes);
-      ordenarTickets(pacientes,paciente);
-      printf("Prioridad ingresada.\n");
+      list_popCurrent(pacientes);   //eliminamos el ticket de la lista de espera
+      ordenarTickets(pacientes,paciente); //aqui ordenamos la lista de espera segun prioridad
+      printf("Prioridad ingresada.\n"); //indicamos que se ingreso
       return;
     }
     paciente = list_next(pacientes); //pasamos al siguiente ticket
@@ -149,10 +132,10 @@ void asignarTicket(List *pacientes){
 
 void mostrarListaTicket(List *pacientes) {
   printf("Tickets en espera ordenados por prioridad: \n");
-  //recorremos la lista para imprimir los tickets con prioridad alta
+  //recorremos la lista para imprimir los tickets ordenados(ya realizado anteriormente) de la lista
   ticketPersona *paciente = list_first(pacientes); //apuntamos a primer elemento lista
   while(paciente != NULL){
-    printf("ID: %d\n",paciente->ID);
+    printf("ID: %d\n",paciente->ID);              //imprimimos los elementos del ticket
     printf("Descripcion: %s\n",paciente->descriProblema);
     printf("Prioridad: ");
       switch (paciente->prioridad){ //indicamos la prioridad segun escogida
@@ -173,10 +156,9 @@ void mostrarListaTicket(List *pacientes) {
 
 void ProcesarSiguienteTicket(List *pacientes, List *pacientesAtendidos){
   ticketPersona *currentTicket = list_first(pacientes); //apuntamos a primero de la lista
-
-  if(currentTicket != NULL){ //cuando tengamos el ticket actual se imprimiran sus datos
+  if(currentTicket != NULL){ //comprobamos que el ticket no sea null, para procesarlo
     printf("Ticket en ser atendido: ");
-    printf("ID: %d\n",currentTicket->ID);
+    printf("ID: %d\n",currentTicket->ID);           //imrprimimos datos del ticket
     printf("Descripcion: %s\n",currentTicket->descriProblema);
     printf("Prioridad: ");
       switch (currentTicket->prioridad){ //indicamos la prioridad segun escogida
