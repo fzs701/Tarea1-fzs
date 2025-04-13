@@ -6,9 +6,9 @@
 #include <ctype.h>
 #include <time.h>
 
-#define BAJO 0
-#define MEDIO 1
-#define ALTO 2
+#define BAJO 0     //definimos prioridad baja con 0 para que sea facil de utilizar
+#define MEDIO 1    //definimos prioridad medio con 1 para que sea facil de utilizar
+#define ALTO 2     //definimos prioridad alta con 2 para que sea facil de utilizar
 
 typedef struct {                //estructura para definir un ticket
   int ID;                       
