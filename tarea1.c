@@ -37,8 +37,7 @@ void ordenarTickets(List *pacientes, ticketPersona *ticket){
   ticketPersona *paciente = list_first(pacientes);
   int comprobar = 0;
   while(paciente != NULL){ //recorremos lista para encontrar ticket con mayor prioridad
-    if(!comprobar &&
-      (ticket->prioridad > paciente->prioridad) ||
+    if((ticket->prioridad > paciente->prioridad) ||
       (ticket->prioridad == paciente->prioridad && ticket->hora < paciente->hora)){
       list_pushBack(listaTemp,ticket);   //si ticket tiene prioridad mas alta que actual, lo elegimos, 
       comprobar = 1;
