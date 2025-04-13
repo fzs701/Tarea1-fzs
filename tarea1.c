@@ -33,17 +33,13 @@ ticketPersona* crearTicket(int id, const char *descripcion){  //creamos un nuevo
 }
 
 void ordenarTickets(List *pacientes, ticketPersona *ticket){
-  //List *listaTemp = list_create();
+  List *listaTemp = list_create();
   /*if(list_first(pacientes) == NULL){
     list_pushBack(pacientes,ticket);
     return;
   }*/
   ticketPersona *paciente = list_first(pacientes);
-  if(paciente == NULL){
-    list_pushBack(pacientes,ticket);
-    return;
-  }
-  //int comprobar = 0;
+  int comprobar = 0;
   
   /*while(paciente != NULL){ //recorremos lista para encontrar ticket con mayor prioridad
     if((ticket->prioridad > paciente->prioridad) ||
@@ -55,25 +51,26 @@ void ordenarTickets(List *pacientes, ticketPersona *ticket){
     paciente = list_next(pacientes);//siguiente de la lista
   }*/
   while(paciente != NULL){ //recorremos lista para encontrar ticket con mayor prioridad
-    if((ticket->prioridad > paciente->prioridad)){
-      list_pushCurrent(pacientes,ticket);   //si ticket tiene prioridad mas alta que actual, lo elegimos, 
-      return;
+    if(!comprobar &&
+      (ticket->prioridad > paciente->prioridad) ||
+      (ticket->prioridad == paciente->prioridad) && difftime(ticket->hora, paciente->hora)< 0){
+      list_pushBack(listaTemp,ticket);   //si ticket tiene prioridad mas alta que actual, lo elegimos, 
+      comprobar = 1;
     }
-    if ((ticket->prioridad == paciente->prioridad) && difftime(ticket->hora, paciente->hora)< 0){
-      list_pushCurrent(pacientes,ticket);   //si ticket tiene prioridad mas alta que actual, lo elegimos, 
-      return;
-    }
+    list_pushBack(listaTemp, paciente);
     paciente = list_next(pacientes);//siguiente de la lista
   }
   list_pushBack(pacientes,ticket);
-  
-  /*list_clean(pacientes);
+  if (!comprobar) {
+    list_pushBack(listaTemp, ticket);
+  }
+  list_clean(pacientes);
   paciente = list_first(listaTemp);
   while(paciente != NULL){
     list_pushBack(pacientes,paciente);
     paciente = list_next(listaTemp);
   }
-  list_clean(listaTemp);*/
+  list_clean(listaTemp);
 }
 
 void registrarTicket(List *pacientes) {
