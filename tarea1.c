@@ -33,28 +33,33 @@ ticketPersona* crearTicket(int id, const char *descripcion){  //creamos un nuevo
 }
 
 void ordenarTickets(List *pacientes, ticketPersona *ticket){
-  List *listaTemp = list_create();
+  //List *listaTemp = list_create();
   ticketPersona *paciente = list_first(pacientes);
   int comprobar = 0;
+  if(paciente == NULL){
+    list_pushBack(pacientes,ticket);
+    return;
+  }
   while(paciente != NULL){ //recorremos lista para encontrar ticket con mayor prioridad
     if((ticket->prioridad > paciente->prioridad) ||
       (ticket->prioridad == paciente->prioridad && ticket->hora < paciente->hora)){
-      list_pushBack(listaTemp,ticket);   //si ticket tiene prioridad mas alta que actual, lo elegimos, 
+      list_popCurrent(pacientes);
+      list_pushBack(pacientes,ticket);   //si ticket tiene prioridad mas alta que actual, lo elegimos, 
       comprobar = 1;
+      break;
     }  
-    list_pushBack(listaTemp,paciente);
     paciente = list_next(pacientes);//siguiente de la lista
   }
   if(!comprobar){
-    list_pushBack(listaTemp,ticket);
+    list_pushBack(pacientes,ticket);
   }
-  list_clean(pacientes);
+  /*list_clean(pacientes);
   paciente = list_first(listaTemp);
   while(paciente != NULL){
     list_pushBack(pacientes,paciente);
     paciente = list_next(listaTemp);
   }
-  list_clean(listaTemp);
+  list_clean(listaTemp);*/
 }
 
 void registrarTicket(List *pacientes) {
