@@ -34,10 +34,10 @@ ticketPersona* crearTicket(int id, const char *descripcion){  //creamos un nuevo
 
 void ordenarTickets(List *pacientes, ticketPersona *ticket){
   //List *listaTemp = list_create();
-  if(list_first(pacientes) == NULL){
+  /*if(list_first(pacientes) == NULL){
     list_pushBack(pacientes,ticket);
     return;
-  }
+  }*/
   ticketPersona *paciente = list_first(pacientes);
   int comprobar = 0;
   
