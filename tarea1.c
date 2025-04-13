@@ -226,20 +226,6 @@ void BuscarticketporID(List *pacientes,List *pacientesAtendidos){
 
   printf("AVISO: No se encontro ese ID.\n"); //si no se encuentra se avisa
 }
-
-void limpiarPantalla(){
-  #ifdef _WIN32
-    system("cls");
-  #else 
-    system("clear");
-  #endif
-}
-void presioneTeclaParaContinuar(){
-  printf("Presione cualquier tecla para continuar...");
-  getchar();
-}
-
-
 // Menú principal para mostrar 
 void mostrarMenuPrincipal() {
   limpiarPantalla();
