@@ -33,12 +33,12 @@ ticketPersona* crearTicket(int id, const char *descripcion){
 }
 
 
-void registrar_paciente(List *pacientes) {
+void registrarTicket(List *pacientes) {
   int id;
   char descripcion[100];
-  printf("Registrar nuevo paciente\n");
+  printf("Registrar nuevo ticket: \n");
 
-  printf("Ingrese ID paciente: ");
+  printf("Ingrese ID ticket: ");
   scanf("%d",&id);
   getchar();
 
@@ -51,7 +51,7 @@ void registrar_paciente(List *pacientes) {
     paciente = list_next(pacientes);
   }
 
-  printf("Ingrese descripcion problema del paciente: ");
+  printf("Ingrese descripcion problema: ");
   scanf("%99[^\n]",descripcion);
 
   ticketPersona *newTicket = crearTicket(id,descripcion);
@@ -66,15 +66,15 @@ void hacerMinuscula(char *texto){
   }
 }
 
-void asignarPaciente(List *pacientes){
+void asignarTicket(List *pacientes){
   int id;
   char descripcion[100];
 
-  printf("Ingrese ID paciente: ");
+  printf("Ingrese ID ticket: ");
   scanf("%d",&id);
   getchar();
 
-  printf("Ingrese prioridad paciente: ");
+  printf("Ingrese prioridad ticket(alto, medio o bajo): ");
   scanf("%s",descripcion);
   hacerMinuscula(descripcion);
 
@@ -94,19 +94,20 @@ void asignarPaciente(List *pacientes){
     }
     paciente = list_next(pacientes);
   }
-  printf("AVISO: No se encontro paciente con ese ID.\n");
+  printf("AVISO: No se encontro ticket con ese ID.\n");
 }
 
-void mostrar_lista_pacientes(List *pacientes) {
-  printf("Pacientes en espera ordenados por prioridad: \n");
+void mostrarListaTicket(List *pacientes) {
+  printf("Tickets en espera ordenados por prioridad: \n");
 
   ticketPersona *paciente = list_first(pacientes);
   while(paciente != NULL){
     if(paciente->prioridad == ALTO){
-      printf("------------");
+      printf("------------\n");
       printf("ID: %d\n", paciente->ID);
       printf("Descripcion: %s\n",paciente->descriProblema);
-      printf("------------");
+      printf("Prioridad: %d\n",paciente->prioridad);
+      //printf("------------");
     }
     paciente = list_next(pacientes);
   }
@@ -114,10 +115,11 @@ void mostrar_lista_pacientes(List *pacientes) {
   paciente = list_first(pacientes);
   while(paciente != NULL){
     if(paciente->prioridad == MEDIO){
-      printf("------------");
+      printf("------------\n");
       printf("ID: %d\n", paciente->ID);
       printf("Descripcion: %s\n",paciente->descriProblema);
-      printf("------------");
+      printf("Prioridad: %d\n",paciente->prioridad);
+      //printf("------------");
     }
     paciente = list_next(pacientes);
   }
@@ -125,10 +127,11 @@ void mostrar_lista_pacientes(List *pacientes) {
   paciente = list_first(pacientes);
   while(paciente != NULL){
     if(paciente->prioridad == BAJO){
-      printf("------------");
+      printf("------------\n");
       printf("ID: %d\n", paciente->ID);
       printf("Descripcion: %s\n",paciente->descriProblema);
-      printf("------------");
+      printf("Prioridad: %d\n",paciente->prioridad);
+      //printf("------------");
     }
     paciente = list_next(pacientes);
   }
@@ -149,10 +152,21 @@ void ProcesarSiguienteTicket(List *pacientes, List *pacientesAtendidos){
   }
 
   if(currentTicket != NULL){
-    printf("Paciente a ser atendido:");
+    printf("Ticket en ser atendido: ");
     printf("ID: %d\n",currentTicket->ID);
     printf("Descripcion: %s\n",currentTicket->descriProblema);
-    printf("Prioridad: %d\n",currentTicket->prioridad);
+    printf("Prioridad: ");
+      switch (currentTicket->prioridad){
+        case ALTO:
+          printf("Alto\n");
+          break;
+        case MEDIO:
+          printf("Medio\n");
+          break;
+        case BAJO:
+          printf("Bajo\n");
+          break;
+      }
     printf("Hora registrada: %s\n",ctime(&currentTicket->hora));
     paciente = list_first(pacientes);
 
@@ -172,14 +186,14 @@ void ProcesarSiguienteTicket(List *pacientes, List *pacientesAtendidos){
 
 void BuscarticketporID(List *pacientes,List *pacientesAtendidos){
   int id;
-  printf("Ingrese ID paciente: ");
+  printf("Ingrese ID ticket: ");
   scanf("%d",&id);
   getchar();
 
   ticketPersona *paciente = list_first(pacientes);
   while(paciente != NULL){
     if(paciente->ID == id){
-      printf("Paciente:");
+      printf("Ticket:");
       printf("ID: %d\n",paciente->ID);
       printf("Descripcion: %s\n",paciente->descriProblema);
       printf("Prioridad: ");
@@ -255,13 +269,13 @@ int main() {
 
     switch (opcion) {
     case '1':
-      registrar_paciente(pacientes);
+      registrarTicket(pacientes);
       break;
     case '2':
-      asignarPaciente(pacientes);
+      asignarTicket(pacientes);
       break;
     case '3':
-      mostrar_lista_pacientes(pacientes);
+      mostrarListaTicket(pacientes);
       break;
     case '4':
       ProcesarSiguienteTicket(pacientes,pacientesAtendidos);
@@ -282,6 +296,7 @@ int main() {
 
   // Liberar recursos, si es necesario
   list_clean(pacientes);
+  list_clean(pacientesAtendidos);
 
   return 0;
 }
