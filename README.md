@@ -17,6 +17,8 @@ Compilar y ejecutar
                   gcc tdas/*.c tarea1.c -Wno-unused-result -o tarea1
 •	Ya compilado, para ejecutar el código se debe escribir en terminal:
                   ./tarea1
+*en caso de que no funcione el temminal, verificamos que estemos en la subcarpeta correcta con:
+                  cd .\Tarea1-fzs-master
 
 opciones que funcionan correctamente:
 
