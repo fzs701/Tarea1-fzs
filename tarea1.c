@@ -105,7 +105,7 @@ void mostrarListaTicket(List *pacientes) {
     if(paciente->prioridad == ALTO){
       printf("ID: %d\n", paciente->ID);
       printf("Descripcion: %s\n",paciente->descriProblema);
-      printf("Prioridad: Alto");
+      printf("Prioridad: Alto\n");
       printf("------------\n");
     }
     paciente = list_next(pacientes);
@@ -116,7 +116,7 @@ void mostrarListaTicket(List *pacientes) {
     if(paciente->prioridad == MEDIO){
       printf("ID: %d\n", paciente->ID);
       printf("Descripcion: %s\n",paciente->descriProblema);
-      printf("Prioridad: Medio");
+      printf("Prioridad: Medio\n");
       printf("------------\n");
     }
     paciente = list_next(pacientes);
@@ -127,7 +127,7 @@ void mostrarListaTicket(List *pacientes) {
     if(paciente->prioridad == BAJO){
       printf("ID: %d\n", paciente->ID);
       printf("Descripcion: %s\n",paciente->descriProblema);
-      printf("Prioridad: Bajo");
+      printf("Prioridad: Bajo\n");
       printf("------------\n");
     }
     paciente = list_next(pacientes);
@@ -242,14 +242,14 @@ void BuscarticketporID(List *pacientes,List *pacientesAtendidos){
 void mostrarMenuPrincipal() {
   limpiarPantalla();
   puts("========================================");
-  puts("     Sistema de Gestión Hospitalaria");
+  puts("     Sistema tickets de soporte técnico");
   puts("========================================");
 
-  puts("1) Registrar paciente");
-  puts("2) Asignar prioridad a paciente");
+  puts("1) Registrar ticket");
+  puts("2) Asignar prioridad a ticket");
   puts("3) Mostrar lista de espera");
-  puts("4) Atender al siguiente paciente");
-  puts("5) Mostrar pacientes por prioridad");
+  puts("4) Atender al siguiente ticket");
+  puts("5) Mostrar pacientes por ticket(ID)");
   puts("6) Salir");
 }
 
