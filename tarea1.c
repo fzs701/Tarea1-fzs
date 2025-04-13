@@ -39,7 +39,11 @@ void registrarTicket(List *pacientes) {
   printf("Registrar nuevo ticket: \n");
 
   printf("Ingrese ID ticket: ");
-  scanf("%d",&id);
+  if(scanf("%d",&id) != 1){
+    printf("AVISO: ID invalido, ingrese un numero.\n");
+    while(getchar() != '\n');
+    return;
+  }
   getchar();
 
   ticketPersona *paciente = list_first(pacientes);
@@ -242,14 +246,14 @@ void BuscarticketporID(List *pacientes,List *pacientesAtendidos){
 void mostrarMenuPrincipal() {
   limpiarPantalla();
   puts("========================================");
-  puts("     Sistema tickets de soporte técnico");
+  puts("  Sistema tickets de soporte tecnico");
   puts("========================================");
 
   puts("1) Registrar ticket");
   puts("2) Asignar prioridad a ticket");
   puts("3) Mostrar lista de espera");
   puts("4) Atender al siguiente ticket");
-  puts("5) Mostrar pacientes por ticket(ID)");
+  puts("5) Mostrar tickets por ID");
   puts("6) Salir");
 }
 
